@@ -1,13 +1,14 @@
 package it.unical.demacs;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Algorithms {
 
     /**
      * Sorts a given non-null array
      *
-     * @param array to ber ordered
+     * @param array to be ordered
      * @throws IllegalArgumentException if the input array is null
      */
     public void sort(int[] array) {
@@ -16,9 +17,8 @@ public class Algorithms {
         }
 
         for (int i = 0; i < array.length - 1; i++) {
-            for (int j = 0; j < array.length - i - 2; j++) {
+            for (int j = 0; j < array.length - i - 1; j++) {
                 if (array[j] > array[j + 1]) {
-                    // Swap array[j] and array[j+1]
                     int temp = array[j];
                     array[j] = array[j + 1];
                     array[j + 1] = temp;
@@ -44,31 +44,32 @@ public class Algorithms {
             return false;
         }
 
-        HashMap<Character, Integer> charCount = new HashMap<>();
+        Map<Character, Integer> charCount = new HashMap<>();
 
-        for (char c : first.toCharArray()) {
-            if (charCount.containsKey(c)) {
-                charCount.put(c, charCount.get(c) + 1);
-            } else {
-                charCount.put(c, 1);
-            }
+        for (char c : first.toLowerCase().toCharArray()) {
+            charCount.put(c, charCount.getOrDefault(c, 0) + 1);
         }
-
-        System.out.println(charCount.entrySet());
 
         for (char c : second.toLowerCase().toCharArray()) {
-            if (charCount.containsKey(c)) {
-                if (charCount.get(c) == 0) {
-                    charCount.remove(c);
-                } else {
-                    charCount.put(c, charCount.get(c) - 1);
-                }
+            if (!charCount.containsKey(c)) {
+                return false;
+            }
+
+            int count = charCount.get(c);
+
+            if (count == 0) {
+                return false;
+            }
+
+            charCount.put(c, count - 1);
+        }
+
+        for (int count : charCount.values()) {
+            if (count != 0) {
+                return false;
             }
         }
 
-        System.out.println(charCount.entrySet());
-        System.out.println(charCount.isEmpty());
-
-        return !charCount.isEmpty();
+        return true;
     }
 }
